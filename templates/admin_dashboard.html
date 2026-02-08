@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='javascript/dashboards.js') }}"></script>
+</head>
+<body>
+<div class="layout">
+    <div class="sidebar">
+        <h2>EMS</h2>
+        <div class="profile-box">
+            <label for="profilePic">
+                <img src="{{ current_user.profile_image and url_for('static', filename=current_user.profile_image) or url_for('static', filename='images/pp.png') }}" id="profileImage" alt="profile picture">
+            </label>
+            <input type="file" id="profilePic" accept="image/*" onchange="uploadProfileImage(event)" hidden>
+            <p>{{ current_user.name }}</p>
+            <small>{{ current_user.department }}</small>
+        </div>
+        <ul class="list-styling">
+            <li><a href="#dashboard">Dashboard</a></li>
+            <li><a href="#attendance">Attendance</a></li>
+            <li><a href="#profile">Profile</a></li>
+            <li><a href="#update-profile">Update Profile</a></li>
+            <li><a href="#apply-leave">Apply Leave</a></li>
+            <li><a href="#change-password">Change Password</a></li>
+            <hr style="margin:15px 0; opacity:0.3;">
+            <li><a href="#employees">Employees</a></li>
+            <li><a href="#create-employee">Create Employee</a></li>
+            <li><a href="#leave-requests">Leave Requests</a></li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <div id="dashboard">
+            <div class="topbar">
+                <h2>Admin Dashboard</h2>
+                <a href="{{ url_for('logout') }}" class="btn danger">Logout</a>
+            </div>
+            <div class="cards">
+                <div class="card">
+                    <h3>Total Employees</h3>
+                    <p id="totalEmployees">{{ total_employees }}</p>
+                    <small>Active Staff</small>
+                </div>
+                <div class="card">
+                    <h3>Pending Leaves</h3>
+                    <p id="pendingLeavesAdmin">{{ pending_leaves_count }}</p>
+                    <small>Awaiting Approval</small>
+                </div>
+                <div class="card">
+                    <h3>Today Attendance</h3>
+                    <p id="todayAttendanceNum">{{ today_attendance }}</p>
+                    <small>Present</small>
+                </div>
+            </div>
+            <div class="content-row">
+                <div class="box">
+                    <h3>Admin Quick Stats</h3>
+                    <p><strong>Pending Approvals:</strong> {{ pending_leaves_count }} leaves</p>
+                </div>
+                <div class="box">
+                    <h3>Recent Activity</h3>
+                    {% if recent_activity %}
+                    <ul class="recent-activity-list">
+                        {% for item in recent_activity %}
+                        <li>
+                            <span class="activity-message">{{ item.message }}</span>
+                            {% if item.time %}<span class="activity-time">{{ item.time }}</span>{% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-muted">No recent activity yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="attendance">
+            <h3>Attendance</h3>
+            <p>Status: <strong id="admin-status" class="status-text">{{ 'Logged In' if admin_attendance_status and admin_attendance_status.status == 'present' and not admin_attendance_status.logout_time else 'Not Logged In' }}</strong></p>
+            <p id="admin-time-display" class="attendance-times">
+                {% if admin_attendance_status and admin_attendance_status.login_time %}
+                Login: {{ admin_attendance_status.login_time }}{% if admin_attendance_status.logout_time %} | Logout: {{ admin_attendance_status.logout_time }}{% else %} | Logout: -{% endif %}
+                {% else %}
+                Login: - | Logout: -
+                {% endif %}
+            </p>
+            <button class="btn" id="adminAttendanceBtn" onclick="toggleAdminAttendance()">{{ 'Logout' if admin_attendance_status and admin_attendance_status.status == 'present' and not admin_attendance_status.logout_time else 'Login' }}</button>
+            <p class="note">Weekends & public holidays auto-marked</p>
+            <div class="calendar-container" style="margin-top:20px;" id="adminCalendar"></div>
+            <div class="calendar-legend">
+                <span><span class="legend-dot legend-present"></span> Present</span>
+                <span><span class="legend-dot legend-absent"></span> Absent</span>
+                <span><span class="legend-dot legend-weekend"></span> Weekend</span>
+            </div>
+        </div>
+
+        <div class="section" id="profile">
+            <h3>My Profile</h3>
+            <p><strong>Name:</strong> {{ current_user.name }}</p>
+            <p><strong>ID:</strong> {{ current_user.emp_id }}</p>
+            <p><strong>Email:</strong> {{ current_user.email }}</p>
+            <p><strong>Role:</strong> Admin</p>
+            <p><strong>Department:</strong> {{ current_user.department }}</p>
+            <p><strong>Date of Joining:</strong> {{ current_user.join_date }}</p>
+        </div>
+
+        <div class="section" id="update-profile">
+            <h3>Update Profile</h3>
+            <form method="POST" action="/update_profile">
+                <input type="text" name="name" placeholder="Full Name" value="{{ current_user.name }}" required>
+                <input type="email" name="email" placeholder="Email" value="{{ current_user.email }}" required>
+                <input type="text" name="department" placeholder="Department" value="{{ current_user.department }}" required>
+                <input type="text" name="qualification" placeholder="Qualification" value="{{ current_user.qualification or '' }}">
+                <button class="btn">Update</button>
+            </form>
+        </div>
+
+        <div class="section" id="apply-leave">
+            <h3>Apply Leave</h3>
+            <form id="leaveForm" onsubmit="applyLeave(event)">
+                <input type="date" id="fromDate" required>
+                <input type="date" id="toDate" required>
+                <select id="leaveType">
+                    <option value="casual">Casual Leave</option>
+                    <option value="sick">Sick Leave</option>
+                    <option value="paid">Paid Leave</option>
+                </select>
+                <textarea id="reason" placeholder="Reason for leave" required></textarea>
+                <button class="btn">Apply Leave</button>
+            </form>
+        </div>
+
+        <div class="section" id="change-password">
+            <h3>Change Password</h3>
+            <form method="POST" action="/change_password">
+                <input type="password" name="currentPwd" placeholder="Current Password" required>
+                <input type="password" name="newPwd" placeholder="New Password" required>
+                <input type="password" name="confirmPwd" placeholder="Confirm Password" required>
+                <button class="btn">Change Password</button>
+            </form>
+        </div>
+
+        <div class="section" id="employees">
+            <h3>Employee Directory</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th><th>ID</th><th>Dept</th><th>Join Date</th><th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for emp in employees %}
+                        <tr>
+                            <td>{{ emp.name }}</td>
+                            <td>{{ emp.emp_id }}</td>
+                            <td>{{ emp.department }}</td>
+                            <td>{{ emp.join_date or '-' }}</td>
+                            <td style="color:green;">Active</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="section" id="create-employee">
+            <h3>Create New Employee</h3>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <p class="flash-error">{{ messages[0] }}</p>
+            {% endif %}
+            {% endwith %}
+            <form method="POST" action="/add_employee" class="form-narrow">
+                <input type="text" name="name" placeholder="Full Name *" required>
+                <input type="text" name="emp_id" placeholder="Employee ID (e.g. EMP004)" required>
+                <input type="email" name="email" placeholder="Email *" required>
+                <input type="text" name="department" placeholder="Department *" required>
+                <input type="text" name="salary" placeholder="Salary (optional)">
+                <input type="date" name="join_date" required>
+                <input type="password" name="password" placeholder="Set Password *" required>
+                <button class="btn">Create & Send Login</button>
+            </form>
+        </div>
+
+        <div class="section" id="leave-requests">
+            <h3>Pending Leave Requests ({{ pending_leaves|length }})</h3>
+            <div class="leave-requests-list">
+                {% for leave in pending_leaves %}
+                <div class="leave-card">
+                    <div>
+                        <h4>{{ leave.name }} <small>({{ leave.emp_id }})</small></h4>
+                        <p><strong>{{ leave.type|title }}</strong> | {{ leave.from_date }} - {{ leave.to_date }}</p>
+                        <p>{{ leave.reason or '-' }}</p>
+                    </div>
+                    <div class="leave-card-actions">
+                        <form method="POST" action="/leave/{{ leave.id }}/approve" style="display:inline;">
+                            <button type="submit" class="btn">Approve</button>
+                        </form>
+                        <form method="POST" action="/leave/{{ leave.id }}/reject" style="display:inline;">
+                            <button type="submit" class="btn danger">Reject</button>
+                        </form>
+                    </div>
+                </div>
+                {% else %}
+                <p>No pending leave requests.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    adminAttendanceLoggedIn = {{ 'true' if admin_attendance_status and admin_attendance_status.status == 'present' and not admin_attendance_status.logout_time else 'false' }};
+</script>
+</body>
+</html>

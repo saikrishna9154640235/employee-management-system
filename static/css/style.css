@@ -1,0 +1,676 @@
+/* ============================================
+   EMS - Design System (consistent UI)
+   ============================================ */
+:root {
+    --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --color-primary: #343c56;
+    --color-primary-hover: #4a5270;
+    --color-accent: #3b82f6;
+    --color-accent-hover: #2563eb;
+    --color-danger: #dc2626;
+    --color-danger-hover: #b91c1c;
+    --color-success: #16a34a;
+    --color-text: #1f2937;
+    --color-text-muted: #6b7280;
+    --color-bg: #f1f5f9;
+    --color-surface: #ffffff;
+    --radius: 8px;
+    --radius-sm: 6px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08);
+}
+
+/* styling for dashboard */
+/* Add these responsive rules to your style.css */
+@media (max-width: 768px) {
+    .layout {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+    
+    .main {
+        padding: 15px;
+    }
+    
+    .cards {
+        flex-direction: column;
+    }
+    
+    .content-row {
+        flex-direction: column;
+    }
+    
+    .box {
+        width: 100% !important;
+    }
+    
+    .calendar-container {
+        height: 280px;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar-grid {
+        font-size: 11px;
+    }
+    
+    .day-cell {
+        padding: 5px;
+        height: 28px;
+        font-size: 11px;
+    }
+}
+
+
+
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-sans);
+}
+html {
+    scroll-behavior: smooth;
+}
+body {
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.section {
+    background: var(--color-surface);
+    padding: 24px;
+    margin-top: 24px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+.section h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+}
+.section p {
+    font-size: 0.9375rem;
+    color: var(--color-text);
+    margin: 6px 0;
+}
+.section p strong {
+    color: var(--color-text-muted);
+    font-weight: 500;
+    min-width: 120px;
+    display: inline-block;
+}
+
+/* Layout */
+.layout {
+    display: flex;
+    height: 100%;
+    position:relative;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    background: var(--color-primary);
+    color: #fff;
+    padding: 24px;
+}
+
+.sidebar h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 24px;
+    letter-spacing: 0.02em;
+}
+
+.profile-box {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.profile-box img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    cursor: pointer;
+    object-fit: cover;
+    border: 2px solid #eee;
+}
+.profile-box img:hover {
+    opacity: 0.8;
+}
+.profile-box p {
+    /* margin-top: 10px;
+    font-weight: bold; */
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+.profile-box small {
+    color: rgba(255,255,255,0.75);
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+.sidebar ul {
+    list-style: none;
+}
+.sidebar ul li {
+    padding: 10px 0;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+}
+.sidebar ul li:hover,
+.sidebar ul li.active {
+    background-color: var(--color-primary-hover);
+    color: #fff;
+}
+
+/* Main Area */
+.main {
+    flex: 1;
+    padding: 20px;
+}
+
+/* Top Bar */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+.topbar h2 {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    letter-spacing: -0.02em;
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 18px;
+    border: none;
+    background: var(--color-accent);
+    color: #fff;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+.btn:hover {
+    background: var(--color-accent-hover);
+}
+.btn:active {
+    transform: scale(0.98);
+}
+.btn.danger {
+    background: var(--color-danger);
+}
+.btn.danger:hover {
+    background: var(--color-danger-hover);
+}
+
+/* Cards */
+.cards {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+.card {
+    background: var(--color-surface);
+    padding: 22px;
+    flex: 1;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.2s ease;
+}
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+.card h3 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.card p {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 4px 0;
+}
+.card small {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+/* Content */
+.content-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.box {
+    background: var(--color-surface);
+    padding: 22px;
+    flex: 1;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    width: 50%;
+}
+.box h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 12px;
+}
+.box p {
+    font-size: 0.9375rem;
+    color: var(--color-text);
+    margin: 6px 0;
+}
+.list-styling {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: #343c56; /* Matches prior suggestion */
+}
+
+.list-styling li a {
+  display: block;
+  padding: 12px 20px;
+  color: #e0e7ff !important; /* Light indigo-grey for high contrast */
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.list-styling li a:hover {
+  background-color: var(--color-primary-hover);
+  color: #fff !important;
+}
+
+/* Forms - dashboard */
+.section form input[type="text"],
+.section form input[type="email"],
+.section form input[type="password"],
+.section form input[type="date"],
+.section form select,
+.section form textarea {
+    width: 100%;
+    max-width: 100%;
+    padding: 12px 14px;
+    margin: 8px 0;
+    font-size: 0.9375rem;
+    font-family: var(--font-sans);
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-sm);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.section form input:focus,
+.section form select:focus,
+.section form textarea:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+.section form input::placeholder,
+.section form textarea::placeholder {
+    color: var(--color-text-muted);
+}
+.section form textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+.section form .btn {
+    margin-top: 12px;
+}
+.section form.form-narrow {
+    max-width: 500px;
+}
+.section a.btn {
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+/* Tables */
+.table-wrap {
+    overflow-x: auto;
+    margin-top: 16px;
+}
+.section table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+}
+.section table thead th {
+    background: var(--color-primary);
+    color: #fff;
+    padding: 12px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.section table tbody td {
+    padding: 14px;
+    border-bottom: 1px solid #e2e8f0;
+    color: var(--color-text);
+}
+.section table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.note {
+    font-size: 0.8125rem;
+    color: var(--color-accent);
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+.calendar-placeholder {
+    height: 180px;
+    background: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    margin-top: 10px;
+}
+
+.status-text {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+/* Calendar Styles - Add to bottom of your style.css */
+.calendar-container {
+    height: 300px;
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.calendar-nav {
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background 0.2s ease;
+}
+.calendar-nav:hover {
+    background: var(--color-primary-hover);
+}
+.calendar-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    text-align: center;
+}
+
+.day-header {
+    background: var(--color-bg);
+    padding: 10px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.day-cell {
+    padding: 6px 4px;
+    min-height: 38px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.day-cell:not(.day-empty):hover {
+    filter: brightness(1.1);
+    transform: scale(1.02);
+}
+
+.day-cell.day-empty {
+    background: transparent !important;
+    cursor: default;
+}
+
+/* Today: ring/border - doesn't override status colors */
+.day-cell.today {
+    box-shadow: inset 0 0 0 2px #3b82f6;
+    font-weight: 700;
+}
+
+.holiday {
+    background: #fef3c7 !important;
+    color: #92400e;
+}
+
+.attendance-present {
+    background: #16a34a !important;
+    color: #fff !important;
+}
+
+.attendance-absent {
+    background: #dc2626 !important;
+    color: #fff !important;
+}
+
+/* Calendar: Present / Absent / Weekend - premium contrast */
+.day-cell.day-present {
+    background: #16a34a !important;
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+.day-cell.day-absent {
+    background: #dc2626 !important;
+    color: #ffffff !important;
+    font-weight: 500;
+}
+
+.day-cell.day-weekend {
+    background: #64748b !important;
+    color: #ffffff !important;
+}
+
+/* Today + status: keep white text, add blue ring */
+.day-cell.today.day-present,
+.day-cell.today.day-absent,
+.day-cell.today.day-weekend {
+    color: #ffffff !important;
+}
+
+.day-cell .day-num {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.day-cell .day-mark {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.attendance-times {
+    font-size: 0.9375rem;
+    color: var(--color-text-muted);
+    margin: 8px 0;
+    font-weight: 500;
+}
+
+.calendar-legend .legend-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    margin-right: 4px;
+    vertical-align: middle;
+}
+
+.legend-present { background: #16a34a; }
+.legend-absent { background: #dc2626; }
+.legend-weekend { background: #64748b; }
+
+/* Calendar premium polish */
+.calendar-container {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}
+
+.calendar-legend {
+    margin-top: 12px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    color: var(--color-text-muted);
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+/* Leave request cards (admin) */
+.leave-requests-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 16px;
+}
+.leave-card {
+    background: #f8fafc;
+    padding: 18px 20px;
+    border-radius: var(--radius-sm);
+    border-left: 4px solid var(--color-accent);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+.leave-card h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 6px;
+}
+.leave-card h4 small {
+    font-weight: 500;
+    color: var(--color-text-muted);
+}
+.leave-card p {
+    font-size: 0.9375rem;
+    margin: 4px 0;
+}
+.leave-card-actions {
+    white-space: nowrap;
+    display: flex;
+    gap: 8px;
+}
+
+/* My leave history (employee) */
+.my-leaves-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+}
+.my-leave-card {
+    background: #f8fafc;
+    padding: 14px 18px;
+    border-radius: var(--radius-sm);
+    border-left: 4px solid var(--color-text-muted);
+}
+.my-leave-card p {
+    margin: 4px 0;
+    font-size: 0.9375rem;
+}
+.my-leave-card .status-approved { color: var(--color-success); font-weight: 600; }
+.my-leave-card .status-rejected { color: var(--color-danger); font-weight: 600; }
+.my-leave-card .status-pending { color: #d97706; font-weight: 600; }
+
+/* Flash message */
+.flash-error {
+    color: var(--color-danger);
+    font-size: 0.9375rem;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+/* Recent Activity */
+.recent-activity-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.recent-activity-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 0.9375rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+.recent-activity-list li:last-child {
+    border-bottom: none;
+}
+.activity-message {
+    color: var(--color-text);
+    flex: 1;
+}
+.activity-time {
+    color: var(--color-text-muted);
+    font-size: 0.8125rem;
+    white-space: nowrap;
+}
+.text-muted {
+    color: var(--color-text-muted);
+    font-size: 0.9375rem;
+    margin: 0;
+}

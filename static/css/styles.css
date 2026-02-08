@@ -1,0 +1,161 @@
+/* Login & Forgot Password - same design system as dashboard */
+:root {
+    --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --color-primary: #343c56;
+    --color-accent: #3b82f6;
+    --color-accent-hover: #2563eb;
+    --color-text: #1f2937;
+    --color-text-muted: #6b7280;
+    --color-bg: #f1f5f9;
+    --color-surface: #ffffff;
+    --radius: 8px;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-sans);
+}
+
+body {
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-size: 15px;
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    width: 380px;
+    max-width: 90vw;
+    background: var(--color-surface);
+    padding: 32px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 24px;
+    color: var(--color-primary);
+    letter-spacing: -0.02em;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 14px 16px;
+    margin: 10px 0;
+    font-size: 0.9375rem;
+    font-family: var(--font-sans);
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+input::placeholder {
+    color: var(--color-text-muted);
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 14px 16px;
+    margin-top: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    background: var(--color-accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+button[type="submit"]:hover {
+    background: var(--color-accent-hover);
+}
+button[type="submit"]:active {
+    transform: scale(0.99);
+}
+
+.remember {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+.remember input {
+    width: auto;
+    margin: 0;
+}
+.remember label {
+    margin: 0;
+    white-space: nowrap;
+}
+
+.link {
+    text-align: center;
+    margin-top: 20px;
+}
+.link a {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+.link a:hover {
+    color: var(--color-accent-hover);
+}
+
+.note {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    margin-top: 12px;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body {
+        padding: 20px;
+    }
+    .container {
+        padding: 28px 24px;
+        margin: 0;
+    }
+    h2 {
+        font-size: 1.375rem;
+    }
+    input, button[type="submit"] {
+        padding: 14px 16px;
+        font-size: 16px; /* Prevents iOS zoom */
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 24px 20px;
+        border-radius: 10px;
+    }
+    h2 {
+        font-size: 1.25rem;
+        margin-bottom: 20px;
+    }
+}
